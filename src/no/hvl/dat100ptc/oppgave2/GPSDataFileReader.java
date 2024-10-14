@@ -1,79 +1,40 @@
 package no.hvl.dat100ptc.oppgave2;
 
-import java.io.*;
-
-import javax.swing.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class GPSDataFileReader {
 
-	// entry separator in CSV files
-	private static String SEP_STR = ",";
+    private static final String SEP_STR = ",";
+    private static final String GPSLOGS_DIR = "src/logs/";
 
-	private static  String GPSDATA_FORMAT = "time,lat,lon,elevation,accuracy,bearing,speed,satellites,"
-			+ "provider,hdop,vdop,pdop,geoidheight,ageofdgpsdata,dgpsid,activity,battery,annotation";
+    public static GPSData readGPSFile(String filename) {
+        GPSData gpsdata = null;
 
-	// location of GPS data files in this Eclipse project
-	private static String GPSLOGS_DIR = System.getProperty("user.dir") + "/logs/";
+        try (BufferedReader br = new BufferedReader(new FileReader(GPSLOGS_DIR + filename + ".csv"))) {
+            
+            int n = Integer.parseInt(br.readLine());  
+            gpsdata = new GPSData(n);
 
-	public static GPSData readGPSFile(String filename) {
+            br.readLine();  
 
-		BufferedReader br = null;
-		GPSData gpsdata = null;
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] gpsdatapoint = line.split(SEP_STR);
 
-		String time, latitude, longitude, elevation;
+                String time = gpsdatapoint[0];
+                String latitude = gpsdatapoint[1];
+                String longitude = gpsdatapoint[2];
+                String elevation = gpsdatapoint[3];
+                
+                gpsdata.insert(time, latitude, longitude, elevation);
+            }
 
-		try {
+        } catch (IOException e) {
+            System.err.println("Feil ved lesing av GPS-filen: " + e.getMessage());
+        }
 
-			br = new BufferedReader(new FileReader(GPSLOGS_DIR + filename + ".csv"));
-
-			String line = br.readLine();
-
-			// first line specifies number of entries in the gps data file
-			int n = Integer.parseInt(line);
-
-			// allocate arrays for the right number of entries
-			gpsdata = new GPSData(n);
-
-			// skip the description line by simply reading it
-			line = br.readLine();
-
-			int i = 0;
-
-			line = br.readLine();
-
-			while (line != null && i < n) {
-
-				// split log entry
-				String[] gpsdatapoint = line.split(SEP_STR);
-
-				time = gpsdatapoint[0];
-				latitude = gpsdatapoint[1];
-				longitude = gpsdatapoint[2];
-				elevation = gpsdatapoint[3];
-				
-				gpsdata.insert(time,latitude,longitude,elevation);
-
-				// try reading next line
-				line = br.readLine();
-				i++;
-			}
-
-		} catch (FileNotFoundException e) {
-		    JOptionPane.showMessageDialog(null,"GPS filen " + filename + "finnes ikke");
-			e.printStackTrace();
-		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null,"GPS filen " + filename + "kunne ikke leses");
-			e.printStackTrace();
-		} finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-
-		return gpsdata;
-	}
+        return gpsdata;
+    }
 }
