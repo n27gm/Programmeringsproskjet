@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class GPSDataFileReader {
+public class GPSDataFileReader { 
 
     private static final String SEP_STR = ",";
     private static final String GPSLOGS_DIR = "src/logs/";
