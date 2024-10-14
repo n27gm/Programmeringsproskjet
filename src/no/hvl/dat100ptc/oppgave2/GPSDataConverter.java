@@ -21,10 +21,15 @@ public class GPSDataConverter {
 	public static GPSPoint convert(String timeStr, String latitudeStr, String longitudeStr, String elevationStr) {
 
 		GPSPoint gpspoint;
-
-		// TODO 
-		throw new UnsupportedOperationException(TODO.method());
 		
+		int time = 0;
+		double latitude = 0.0;
+		double longitude = 0.0;
+		double elevation = 0.0;	
+				
+		gpspoint = new GPSPoint(time, latitude, longitude, elevation);
+
+		return gpspoint;
 	}
 	
 }
