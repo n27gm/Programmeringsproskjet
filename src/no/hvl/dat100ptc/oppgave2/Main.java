@@ -5,19 +5,19 @@ import no.hvl.dat100ptc.oppgave1.GPSPoint;
 public class Main {
 
     public static void main(String[] args) {
-        // 1. Opprett to GPSPoint-objekter
-        GPSPoint point1 = new GPSPoint(31946, 60.385390, 5.217217, 61.9);  // Eksempelverdier
-        GPSPoint point2 = new GPSPoint(32000, 60.389780, 5.222880, 70.5);  // Eksempelverdier
+        GPSPoint point1 = new GPSPoint(0, 1.0, 2.0, 3.0);
+        GPSPoint point2 = new GPSPoint(0, 4.0, 5.0, 6.0);
+        GPSPoint point3 = new GPSPoint(0, 7.0, 8.0, 9.0);
 
-        // 2. Opprett et GPSData-objekt med plass til to GPSPoint-objekter
-        GPSData gpsData = new GPSData(2);
+        GPSData gpsData = new GPSData(3);
 
-        // 3. Sett inn de to GPSPoint-objektene i GPSData-tabellen
         gpsData.insertGPS(point1);
         gpsData.insertGPS(point2);
+        gpsData.insertGPS(point3);
 
-        // 4. Skriv ut informasjon om GPSPoint-objektene ved å bruke print-metoden
         gpsData.print();
     }
+
 }
+
 
