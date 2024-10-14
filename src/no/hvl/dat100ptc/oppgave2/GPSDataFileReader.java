@@ -3,7 +3,7 @@ package no.hvl.dat100ptc.oppgave2;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-
+ 
 public class GPSDataFileReader { 
 
     private static final String SEP_STR = ",";
