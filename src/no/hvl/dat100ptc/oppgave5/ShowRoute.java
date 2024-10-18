@@ -76,8 +76,12 @@ public class ShowRoute extends EasyGraphics {
 		setColor(0,0,0);
 		setFont("Courier",12);
 		
-		// TODO
-		throw new UnsupportedOperationException(TODO.method());
+		drawString("Total time : " + gpscomputer.totalTime() + "\n" + 
+		"Total distance : " + gpscomputer.totalDistance() + "km" + "\n" +
+		"Total elevation: " + gpscomputer.totalElevation() + "m" + "\n" +
+		"Max speed      : " + (gpscomputer.maxSpeed()*3.6) + "km/t" + "\n" +
+		"Average speed  : " + gpscomputer.averageSpeed()*3.6 + "km/t" + "\n" +
+		"Energy         : " + gpscomputer.totalKcal(80) + "kcal",TEXTDISTANCE,0);
 		
 	}
 
