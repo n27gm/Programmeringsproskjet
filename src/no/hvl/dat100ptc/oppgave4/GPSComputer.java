@@ -55,8 +55,8 @@ public class GPSComputer {
 
 		int time = 0;
 		
-		for (int i = 0; i<gpspoints.length; i++) {
-			time += gpspoints[i].getTime();
+		for (int i = 1; i<gpspoints.length; i++) {
+			time += gpspoints[i].getTime()-gpspoints[i-1].getTime();
 		}
 		return time;
 	}
@@ -65,7 +65,7 @@ public class GPSComputer {
 
 		double[] speeds = new double[gpspoints.length-1];
 		
-		for (int i = 0; i<gpspoints.length-1; i++) {
+		for (int i = 0; i<speeds.length; i++) {
 			speeds[i] = GPSUtils.speed(gpspoints[i], gpspoints[i+1]); 
 		}
 		
@@ -88,7 +88,7 @@ public class GPSComputer {
 		for (int i = 0; i<speeds().length; i++) {
 			average += speeds()[i];
 		} 
-		return average /= speeds().length;
+		return average;
 	}
 
 
@@ -124,8 +124,8 @@ public class GPSComputer {
 
 		double totalkcal = 0;
 
-		for (int i = 0; i<speeds().length; i++) {
-			totalkcal += kcal(weight,gpspoints[i].getTime(),speeds()[i]);
+		for (int i = 1; i<speeds().length+1; i++) {
+			totalkcal += kcal(weight,gpspoints[i].getTime()-gpspoints[i-1].getTime(),speeds()[i-1]);
 		}
 		return totalkcal;
 	}
@@ -141,7 +141,7 @@ public class GPSComputer {
 		"Total elevation:     " + totalElevation() + " m" + "\n" +
 		"Max speed		:      " + (maxSpeed()*3.6) + " km/t" + "\n" +
 		"Average speed	:      " + (averageSpeed()*3.6) + " km/t" + "\n" +
-		"Energy			:     " + kcal(WEIGHT,gpspoints[0].getTime(),speeds()[0]) + " kcal" + "\n" +
+		"Energy			:     " + kcal(WEIGHT,totalTime(),averageSpeed()) + " kcal" + "\n" +
 		seperator);
 	}
 }
