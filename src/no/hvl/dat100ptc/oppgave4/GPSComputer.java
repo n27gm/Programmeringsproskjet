@@ -79,18 +79,11 @@ public class GPSComputer {
 	}
 
 	public double averageSpeed() {
-	    double[] speedsArray = speeds();
+	   
 	    double totalSpeed = 0;
-
-	    for (double speed : speedsArray) {
-	        totalSpeed += speed;
-	    }
-
-	    return totalSpeed / speedsArray.length;
+	    
+	    return totalSpeed = totalDistance() / totalTime();
 	}
-
-
-
 
 	public static final double MS = 2.23;
 
