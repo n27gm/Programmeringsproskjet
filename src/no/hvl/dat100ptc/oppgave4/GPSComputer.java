@@ -38,18 +38,15 @@ public class GPSComputer {
 	}
 
 	public double totalElevation() {
-
-		double elevation = 0;
-		
-		elevation += gpspoints[0].getElevation();
-
-		for (int i = 1; i<gpspoints.length-1; i++) {
-			if (gpspoints[i].getElevation() > gpspoints[i-1].getElevation()) {
-				elevation += gpspoints[i].getElevation() - gpspoints[i-1].getElevation();
-			}
-		}
-		return elevation;
+	    double elevation = 0;
+	    for (int i = 1; i < gpspoints.length; i++) {
+	        if (gpspoints[i].getElevation() > gpspoints[i-1].getElevation()) {
+	            elevation += gpspoints[i].getElevation() - gpspoints[i-1].getElevation();
+	        }
+	    }
+	    return elevation;
 	}
+
 
 	public int totalTime() {
 
@@ -82,66 +79,81 @@ public class GPSComputer {
 	}
 
 	public double averageSpeed() {
+	    double[] speedsArray = speeds();
+	    double totalSpeed = 0;
 
-		double average = 0;
-		
-		for (int i = 0; i<speeds().length; i++) {
-			average += speeds()[i];
-		} 
-		return average;
+	    for (double speed : speedsArray) {
+	        totalSpeed += speed;
+	    }
+
+	    return totalSpeed / speedsArray.length;
 	}
 
 
-	// conversion factor m/s to miles per hour (mps)
+
+
 	public static final double MS = 2.23;
 
 	public double kcal(double weight, int secs, double speed) {
+	    double kcal;
+	    double met = 0;
+	    double speedmph = speed * MS;
+	    double t = secs / 3600.0; 
 
-		double kcal;
+	    if (speedmph < 10.0) {
+	        met = 4.0;
+	    } else if (speedmph < 12.0) {
+	        met = 6.0;
+	    } else if (speedmph < 14.0) {
+	        met = 8.0;
+	    } else if (speedmph < 16.0) {
+	        met = 10.0;
+	    } else if (speedmph <= 20.0) {
+	        met = 12.0;
+	    } else {
+	        met = 16.0;
+	    }
 
-		double met = 0;		
-		double speedmph = speed * MS;
-		int t = secs/3600;
-
-		if (speedmph < 10.0) {
-			met = 4.0;
-		} else if (speedmph >= 10.0 && speedmph < 12.0) {
-			met = 6.0;
-		} else if (speedmph >= 12.0 && speedmph < 14.0) {
-			met = 8.0;
-		} else if (speedmph >= 14.0 && speedmph < 16.0) {
-			met = 10.0;
-		} else if (speedmph >= 16.0 && speedmph <= 20.0) {
-			met = 12.0;
-		} else if (speedmph > 20.0) {
-			met = 16.0;
-		}
-		kcal = met * weight * t;
-		return kcal;
+	    kcal = met * weight * t;
+	    return kcal;
 	}
+
 
 	public double totalKcal(double weight) {
+	    double totalkcal = 0;
+	    double[] speedsArray = speeds();
 
-		double totalkcal = 0;
+	    for (int i = 0; i < speedsArray.length; i++) {
+	        int secs = gpspoints[i+1].getTime() - gpspoints[i].getTime();
+	        totalkcal += kcal(weight, secs, speedsArray[i]);
+	    }
 
-		for (int i = 1; i<speeds().length+1; i++) {
-			totalkcal += kcal(weight,gpspoints[i].getTime()-gpspoints[i-1].getTime(),speeds()[i-1]);
-		}
-		return totalkcal;
+	    return totalkcal;
 	}
+
+	
+	public String formatTime(int secs) {
+	    int hours = secs / 3600;
+	    int minutes = (secs % 3600) / 60;
+	    int seconds = secs % 60;
+
+	    return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+	}
+
 	
 	private static double WEIGHT = 80.0;
 	
 	public void displayStatistics() {
 
-		String seperator = "==============================================";
-		System.out.print(seperator + "\n" + 
-		"Total time		:   " + totalTime() + "\n" +
-		"Total distance :      " + (totalDistance()/1000) + " km" + "\n" +
-		"Total elevation:     " + totalElevation() + " m" + "\n" +
-		"Max speed		:      " + (maxSpeed()*3.6) + " km/t" + "\n" +
-		"Average speed	:      " + (averageSpeed()*3.6) + " km/t" + "\n" +
-		"Energy			:     " + kcal(WEIGHT,totalTime(),averageSpeed()) + " kcal" + "\n" +
-		seperator);
+	    String separator = "==============================================";
+	    System.out.println(separator);
+	    System.out.println("Total time     :   " + formatTime(totalTime()));
+	    System.out.println("Total distance :      " + String.format("%.2f", totalDistance()/1000) + " km");
+	    System.out.println("Total elevation:     " + String.format("%.2f", totalElevation()) + " m");
+	    System.out.println("Max speed      :      " + String.format("%.2f", maxSpeed() * 3.6) + " km/t");
+	    System.out.println("Average speed  :      " + String.format("%.2f", averageSpeed() * 3.6) + " km/t");
+	    System.out.println("Energy         :     " + String.format("%.2f", totalKcal(WEIGHT)) + " kcal");
+	    System.out.println(separator);
 	}
+
 }
