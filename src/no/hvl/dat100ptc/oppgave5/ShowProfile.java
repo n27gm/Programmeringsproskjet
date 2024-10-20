@@ -52,7 +52,7 @@ public class ShowProfile extends EasyGraphics {
 			if (gpspoints[i].getElevation() < 0) {
 				y = 0;
 			}
-			drawLine(x,ybase,x,y+ybase);
+			drawLine(x,ybase,x,ybase-y);
 			x++;
 		}
 	}

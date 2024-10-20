@@ -43,7 +43,7 @@ public class ShowSpeed extends EasyGraphics {
 	
 		for (int i = 0; i<gpscomputer.speeds().length; i++) {
 			y = (int)gpscomputer.speeds()[i]*36/10;
-			drawLine(x,ybase,x,y+ybase);
+			drawLine(x,ybase,x,ybase-y);
 			x++;
 		}
 		
